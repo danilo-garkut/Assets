@@ -84,3 +84,25 @@ function classManager(el, classes_names_array, action)
 	el.className = classes.join(" ");
 }
 
+
+function enableDisableInputs(form, action)
+{
+	for (var i = 0 ; i < form.elements.length ; i++)
+	{
+		var el = form.elements[i];
+		if (action === "enable")
+		{
+			el.disabled = false;
+		}
+		else
+		{
+			el.disabled = true;
+		}
+	}
+	if (action === "enable")
+	{
+		form.reset();
+	}
+	return form.elements;
+}
+
