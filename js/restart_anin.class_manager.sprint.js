@@ -1,3 +1,12 @@
+function sprint(body, fill_data_collection)
+{
+	return body.replace(/\$(\d+|\w+)/g, function(a, b, c)
+	{
+		return fill_data_collection[a.substring(1)];
+	});
+}
+
+
 function restartAnin(el, className, callback, callback_max_control)
 {
 	if (callback !== undefined)
