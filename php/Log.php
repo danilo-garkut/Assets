@@ -17,7 +17,7 @@ class Log
 		$this->where = $this->default_where;
 		if ($specific_where !== NULL)
 		{
-			$this->where = $specific_where . ".$where";
+			$this->where = $specific_where;
 		}
 		if ($log_id !== NULL)
 		{
