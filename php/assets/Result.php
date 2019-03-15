@@ -7,10 +7,12 @@ class Result
 
 	private $success = null;
 	private $bundle = null;
+	private $Log = null;
 
 	function __construct()
 	{
 		//
+		$this->Log = new Log;
 		$this->success = false;
 		$this->bundle = 
 		[
@@ -29,9 +31,9 @@ class Result
 	{
 		$this->commonForBothSuccessAndFail($bundle);
 		$this->success = false;
-		if ($log)
+		if ($log === true)
 		{
-			Log::log($log["msg"], $log["label"]);
+			$this->Log($log["msg"], $log["label"]);
 		}
 	}
 

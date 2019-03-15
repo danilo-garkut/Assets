@@ -1,8 +1,5 @@
 <?php
-
 namespace assets;
-
-//It will be less static
 
 class Log
 {
@@ -10,7 +7,7 @@ class Log
 	private $default_where = "debug.log";
 	private $where = NULL;
 	private $is_echo_turned_on = false;
-	private $log_id = "";
+	private $log_id = NULL;
 	
 	function __construct($specific_where = NULL, $log_id = NULL)
 	{
@@ -40,7 +37,7 @@ class Log
 		return $this->where_base_block . $this->where;
 	}
 
-	public function echo($matter, $label = ":")
+	public function echo($matter, $label = "++")
 	{
 		if ($this->is_echo_turned_on === false)
 		{
@@ -57,8 +54,8 @@ class Log
 	private function commonOutput($matter, $label)
 	{
 		return ">>>>>>" . $label . ":" . $this->addLogID() . ":" .
-			self::makeNowDate() . "\n\n" .
-			print_r($matter, true) . self::checkClassics($matter) . "\n\n" .
+			LowCohesion::makeNowDate() . "\n\n" .
+			print_r($matter, true) . LowCohesion::checkClassics($matter) . "\n\n" .
 			"<<<<<<" .
 			"\n\n\n\n";
 	}
@@ -69,35 +66,9 @@ class Log
 		{
 			return $this->log_id;
 		}
-		return "";
+		return "++";
 	}
 
-	public function makeNowDate($style = "H:i:s d/m/Y")
-	{
-		return date($style);
-	}
-
-	public static function checkClassics($matter)
-	{
-		$extra = null;
-		if ($matter === null)
-		{
-			$extra = ">NULL<";
-		}
-		else if ($matter === true)
-		{
-			$extra = ">TRUE<";
-		}
-		else if ($matter === false)
-		{
-			$extra = ">FALSE<";
-		}
-		else if ($matter === "")
-		{
-			$extra = ">EMPTY_STRING<";
-		}
-		return $extra;
-	}
 
 	public function turnOnEcho()
 	{
