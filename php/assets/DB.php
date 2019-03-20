@@ -10,18 +10,18 @@ class DB
 	private $match_dbname = '/(?<=dbname=)[[:alnum:]_]+/';
 	private $log = NULL;
 	private $log_client = NULL;
+	private $context = NULL;
 
-	function __construct($string_connection = "dbname=postgres user=postgres")
+	function __construct($string_connection = "dbname=postgres user=postgres", $context = "[context]")
 	{
 		$this->connection_resource = 
 			pg_connect($string_connection);
 
 		$this->string_connection = $string_connection;
-
 		$this->stateDBName();
-
-		$this->log = new Log($this->getDBName(), get_class());
+		$this->log = new Log($this->getDBName(), $context);
 		$this->log->echo($this->connection_resource);
+		$this->context = $context;
 	}
 	
 	public function allNonSelect($query, $values)

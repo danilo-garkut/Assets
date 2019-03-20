@@ -1,17 +1,15 @@
 <?php
+
 namespace assets;
 
 class Log
 {
-	private $where_base_block = __DIR__ . "/../../logs/"; //$this->setBaseDir() below
-	private $default_where = "debug.log";
-	private $where = NULL;
+	private $where = "/tmp/debug.log";
 	private $is_echo_turned_on = false;
-	private $log_id = NULL;
+	private $log_id = NULL; //or context
 	
 	function __construct($specific_where = NULL, $log_id = NULL)
 	{
-		$this->where = $this->default_where;
 		if ($specific_where !== NULL)
 		{
 			$this->where = $specific_where;
@@ -20,44 +18,45 @@ class Log
 		{
 			$this->log_id = $log_id;
 		}
+		if (isset($_SERVER["argc"], $_SERVER["argv"])) //So its CLI
+		{
+			$this->is_echo_turned_on = true;
+//			$this->echo("Its CLI");
+		}
 	}
 
-	public function log($matter, $label = ":")
+	public function log($matter, $label = "[label]")
 	{
 		file_put_contents
 		(
-			$this->where(), 
-			"\n" . $this->commonOutput($matter, $label),
+			$this->where, 
+			$this->commonOutput($matter, $label),
 			FILE_APPEND
 		);
 	}
 
-	private function where()
-	{
-		return $this->where_base_block . $this->where;
-	}
-
-	public function echo($matter, $label = "++")
+	public function echo($matter, $label = "[label]")
 	{
 		if ($this->is_echo_turned_on === false)
 		{
+			$this->log($matter, $label);
 			return;
 		}
 		echo $this->commonOutput($matter, $label);
 	}
 
-	public function setBaseDir($which)
+	public function setLogPlace($which)
 	{
-		$this->$where_base_block = $which;
+		$this->where = $which;
 	}
 
 	private function commonOutput($matter, $label)
 	{
 		return ">>>>>>" . $label . ":" . $this->addLogID() . ":" .
-			LowCohesion::makeNowDate() . "\n\n" .
-			print_r($matter, true) . LowCohesion::checkClassics($matter) . "\n\n" .
+			LowCohesion::makeNowDate() . "\n" .
+			print_r($matter, true) . LowCohesion::checkClassics($matter) . "\n" .
 			"<<<<<<" .
-			"\n\n\n\n";
+			"\n\n";
 	}
 
 	private function addLogID()
@@ -66,7 +65,7 @@ class Log
 		{
 			return $this->log_id;
 		}
-		return "++";
+		return "[log_id]";
 	}
 
 

@@ -42,13 +42,13 @@ class LowCohesion
 		spl_autoload_register
 		(
 			(
-				function ($paths)
+				function ($paths, $Log)
 				{
-					$autoload = function ($class) use ($paths)
+					$autoload = function ($class) use ($paths, $Log)
 					{
-						$Log->log($class, "Need to autoload");
+						$Log->echo($class, "Need to autoload");
 						$invert_bar = preg_replace('/\\\/', "/", $class);
-						$Log->log($invert_bar, "InvertedBars");
+						$Log->echo($invert_bar, "InvertedBars");
 						foreach($paths as $key => $value)
 						{
 							$expected = $value . "/" . $invert_bar . ".php";							
@@ -57,10 +57,10 @@ class LowCohesion
 								include($expected);
 							}
 						}
-					}
+					};
 					return $autoload;
 				}
-			)($paths);
+			)($paths, $Log)
 		);
 	}
 
