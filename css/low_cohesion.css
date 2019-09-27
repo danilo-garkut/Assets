@@ -1,0 +1,59 @@
+:root
+{
+	--a_beautiful:DarkOliveGreen;
+	--a_magnificence:DarkTurquoise;
+}
+
+div.input-crib
+{
+padding:1em;
+border:1px solid var(--a_beautiful);
+color:black;
+position:relative;
+z-index:2;
+}
+
+div.input-crib > textarea,
+div.input-crib > select,
+div.input-crib > input
+{
+font-family:'LaneNarrow', 'arial';
+width:95%;
+font-size:2em;
+outline:none;
+color:var(--a_beautiful);
+border:0;
+background:none;
+}
+
+div.input-crib > select
+{
+padding:.5em;
+border:1px solid var(--a_beautiful);
+background-color:var(--a_magnificence);
+}
+
+div.input-crib > textarea
+{
+height:5em;
+resize:none;
+border:1px solid var(--a_beautiful);
+}
+
+div.input-crib > span.placeholder
+{
+display:none;
+position:absolute;
+right:.5em;
+top:.5em;
+font-size:.8em;
+animation-name:;
+animation-duration:250ms;
+color:white;
+}
+
+div.input-crib > input:not(:placeholder-shown) ~ span.placeholder
+{
+display:block;
+}
+

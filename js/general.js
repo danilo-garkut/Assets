@@ -6,6 +6,102 @@ function sprint(body, fill_data_collection)
 	});
 }
 
+function applyFilter( input_list )
+{
+	for (var i = 0 ; i < input_list.length ; i++)
+	{
+		var input = input_list[ i ];
+		var name = sprint( "filter$0", [ input.getAttribute("filter") ] );
+		if 
+		(   
+			window &&
+			!! window[ name ] === true
+		)
+		{
+			input.addEventListener
+			(
+				"keydown",
+				window[ name ].bind( input, new InputRegexes() )
+			);
+			/*
+			input.addEventListener
+			(
+				"keyup",
+				window[ name ]
+			);
+			*/
+		}
+	}
+}
+
+function InputRegexes()
+{
+	var vars = 
+	{
+		single:
+
+			/^.$/,
+
+		single_integer:
+
+			/^[0-9]$/,
+
+		integer:
+
+			/^[0-9]+$/,
+
+		single_dot:
+
+			/^\.$/,
+
+		rational:
+
+			/\d+\.\d+/
+	}
+
+	if ( InputRegexes.prototype.vars === undefined)
+	{
+		InputRegexes.prototype.vars = vars;
+	}
+
+	function machine( matter, cherry_picked )
+	{
+		for ( var i = 0 ; i < cherry_picked.length ; i++ )
+		{
+			if ( matter.match( this.vars[ cherry_picked[i] ] ) === null )
+			{
+				return {
+					upto: i,
+					completed: ( cherry_picked.length === ( i + 1 ) )
+				};
+			}
+		}
+
+		return {
+			upto: i,
+			completed:( cherry_picked.length === ( i + 1 ) )
+		};
+	}
+
+}
+
+function filterInteger( regexes, ev )
+{
+	var value = this.value;
+	console.log( ev, this, this.selectionStart );
+}
+
+function filterRational ( regexes, ev )
+{
+}
+
+function roundWithPrecision( number, precision )
+{
+	var technique = number + ( precision / 2 );
+	return (
+		technique - ( technique % precision )
+	);
+}
 
 function restartAnin(el, className, callback, callback_max_control)
 {

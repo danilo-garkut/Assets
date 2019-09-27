@@ -1,0 +1,25 @@
+
+group "assets"
+
+apply plugin: "java"
+
+sourceSets
+{
+	main
+	{
+		java
+		{
+			srcDirs = ["."]
+		}
+	}
+}
+
+task("checkAllJava")
+{
+	doFirst
+	{
+		sourceSets.main.allJava.findAll({println it})
+	}
+}
+
+println "Hello we are in Assets, group and name: $group, $name"
