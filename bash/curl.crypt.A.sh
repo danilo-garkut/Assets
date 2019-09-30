@@ -1,8 +1,11 @@
 #!/bin/bash
 
+source Shell.functions.sh
 
-source data.curl.crypt
-source Source.this.sh
+#Personal data
+source data.curl.crypt.sh
+#source  ../../MyStuff/BashScripts/mine.data.curl.crypt.sh
+
 
 IN=/tmp/in.curl.crypt
 OUT=/tmp/out.curl.crypt
@@ -15,23 +18,37 @@ OUT2=/tmp/out2.curl.crypt
 
 hexkey=$(CharToHex $key)
 
-function CryptAndCurl()
+# A crypts
+function A
 {
 	echo -en $crypt_this > $IN
 	echo "Crypting: $crypt_this, length of ${#crypt_this}"
 	Encrypt $IN $OUT $hexkey $iv
 	echo "Hexkey from $key: $hexkey"
-	post="dados=$(cat $OUT)"
-	echo "Sending: $post"
+	post="$data_pack_name=$(cat $OUT)"
+	echo "$post"
+}
+
+function B
+{
 	$(Curl $post $url) > $IN2
 }
 
-CryptAndCurl
+# C decrypts
+function C
+{
+	echo "Decrypting: $(cat $IN2)"
+	Base64Decode $IN2 $OUT2
+	echo 
+	Decrypt $hexkey $iv $OUT2
+}
 
-echo "Imediate response: $(cat $IN2)"
-Base64Decode $IN2 $OUT2
-echo 
-Decrypt $hexkey $iv $OUT2
+
+A
+B
+C
+
+
 
 
 
