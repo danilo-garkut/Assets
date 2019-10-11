@@ -3,8 +3,8 @@
 source Shell.functions.sh
 
 #Personal data
-source data.curl.crypt.sh
-#source  ../../MyStuff/BashScripts/mine.data.curl.crypt.sh
+#source data.curl.crypt.A.sh
+source  ../../MyStuff/BashScripts/mine.data.curl.crypt.sh
 
 
 IN=/tmp/in.curl.crypt
@@ -45,8 +45,8 @@ function C
 
 
 A
-B
-C
+#B
+#C
 
 
 

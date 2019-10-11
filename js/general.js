@@ -6,6 +6,14 @@ function sprint(body, fill_data_collection)
 	});
 }
 
+function fillTo( pack, config )
+{
+	for (var i = 0 ; i < pack.length ; i++)
+	{
+		
+	}
+}
+
 function applyFilter( input_list )
 {
 	for (var i = 0 ; i < input_list.length ; i++)
@@ -42,6 +50,10 @@ function InputRegexes()
 
 			/^.$/,
 
+		at_least_2:
+
+			/^.{2,}$/,
+
 		single_integer:
 
 			/^[0-9]$/,
@@ -54,14 +66,24 @@ function InputRegexes()
 
 			/^\.$/,
 
+		has_a_dot:
+			
+			/\./,
+
 		rational:
 
-			/\d+\.\d+/
+			/\^d+(\.\d+)?$/
+	}
+
+	var functions = 
+	{
+		machine: machine
 	}
 
 	if ( InputRegexes.prototype.vars === undefined)
 	{
-		InputRegexes.prototype.vars = vars;
+		InputRegexes.prototype.vars = vars ;
+		InputRegexes.prototype.functions = functions ;
 	}
 
 	function machine( matter, cherry_picked )
@@ -87,12 +109,59 @@ function InputRegexes()
 
 function filterInteger( regexes, ev )
 {
-	var value = this.value;
-	console.log( ev, this, this.selectionStart );
+	return rightOffTheBatMatchingBasic.call( null, ev, regexes, carryOn.bind( this ) );
+
+	function carryOn()
+	{
+		var value = this.value;
+		var key = ev.key;
+		ev.preventDefault();
+	}
+}
+
+function IntegerValueOf( matter )
+{
+	return parseInt( matter );
 }
 
 function filterRational ( regexes, ev )
 {
+	return rightOffTheBatMatchingBasic.call( null, ev, regexes, carryOn.bind( this ) );
+
+	function carryOn()
+	{
+		var value = this.value;
+		var key = ev.key;
+		
+		if 
+		(
+			value.match( regexes.vars.has_a_dot ) === null &&
+			key.match( regexes.vars.single_dot ) === null
+		)
+		{
+			return;
+		}
+		
+		ev.preventDefault();
+	}
+}
+
+//Otherwise it could be a combination that we should let pass
+function rightOffTheBatMatchingBasic( ev, regexes, callback )
+{
+	console.log(ev);
+	var key = ev.key;
+	if 
+	(
+		key.match( regexes.vars.single ) === null ||
+		key.match( regexes.vars.integer ) !== null
+	)
+	{
+		//It is trustable, so return
+		return;
+	}
+
+	callback();
 }
 
 function roundWithPrecision( number, precision )
@@ -141,51 +210,3 @@ function restartAnin(el, className, callback, callback_max_control)
 	}
 	return el;
 }
-
-
-function classManager(el, classes_names_array, action)
-{	
-	if(el === undefined)
-		return;
-	var classes_names = el.className;
-	if (el.tagName.toLowerCase() === "svg")
-	{
-		classes_names = el.className.baseVal;
-	}
-	var classes = classes_names.split(" ");
-	if (action === "add" || action === undefined)
-	{
-		var has_added = false;
-		for (var w = 0 ; w < classes_names_array.length ; w++)
-		{
-			if (classes.indexOf(classes_names_array[w]) === -1)
-			{
-				classes.push(classes_names_array[w]);
-				has_added = true;
-			}
-		}
-		var classes_joined = classes.join(" ");
-		if (el.tagName.toLowerCase() === "svg")
-		{
-			el.className.baseVal = classes_joined;
-			return has_added;
-		}
-		el.className = classes_joined;
-		return has_added;
-	}
-	for (var w = 0 ; w < classes_names_array.length ; w++)
-	{
-		var index = classes.indexOf(classes_names_array[w]);		
-		if (index !== -1)
-		{
-			classes.splice(index, 1);
-		}
-	}
-	if (el.tagName.toLowerCase() === "svg")
-	{
-		el.className.baseVal = classes.join(" ");
-		return;
-	}
-	el.className = classes.join(" ");
-}
-

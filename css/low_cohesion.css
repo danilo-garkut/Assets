@@ -2,29 +2,42 @@
 {
 	--a_beautiful:DarkOliveGreen;
 	--a_magnificence:DarkTurquoise;
+	--inputs-and-fa:2em;
 }
 
 div.input-crib
 {
 padding:1em;
 border:1px solid var(--a_beautiful);
+border-bottom-width:0;
 color:black;
 position:relative;
 z-index:2;
 }
 
+div.input-crib:last-child
+{
+border-bottom-width:1px;
+}
+
+/*****\Inputs******/
 div.input-crib > textarea,
 div.input-crib > select,
 div.input-crib > input
 {
-font-family:'LaneNarrow', 'arial';
+/*font-family:'LaneNarrow', 'arial';*/
+font-family:'Arial';
 width:95%;
-font-size:2em;
+font-size:var(--inputs-and-fa);
 outline:none;
 color:var(--a_beautiful);
 border:0;
 background:none;
+line-height:1;
+/*height:1em;*/
+display:block;
 }
+
 
 div.input-crib > select
 {
@@ -40,20 +53,74 @@ resize:none;
 border:1px solid var(--a_beautiful);
 }
 
-div.input-crib > span.placeholder
+/*****\Placeholder******/
+
+div.input-crib > aside.placeholder
 {
 display:none;
-position:absolute;
-right:.5em;
-top:.5em;
-font-size:.8em;
-animation-name:;
+font-size:.7em;
+float:left;
+animation-name:from-left;
 animation-duration:250ms;
 color:white;
 }
 
-div.input-crib > input:not(:placeholder-shown) ~ span.placeholder
+div.input-crib > input:not(:placeholder-shown) ~ aside.placeholder
 {
 display:block;
 }
+
+
+/*****\HelpAside******/
+
+.input-crib > aside.role-of-this-value
+{
+/*float:right;*/
+width:1em;
+height:1em;
+padding:.5em;
+border:1px solid var(--DarkOliveGreen);
+background-color:var(--a_beautiful);
+position:absolute;
+right:0;
+bottom:0;
+}
+
+.input-crib > aside.role-of-this-value:hover
+{
+width:auto;
+height:auto;
+}
+
+.input-crib > aside.role-of-this-value::before
+{
+content:"?";
+/*line-height:1em;*/
+text-align:center;
+display:block;
+}
+
+.input-crib > aside.role-of-this-value:hover::before
+{
+display:none;
+}
+
+.input-crib > aside.role-of-this-value > .clarification
+{
+display:none;
+}
+
+.input-crib > aside.role-of-this-value:hover > .clarification
+{
+display:block;
+}
+
+
+
+
+
+
+
+
+
 
