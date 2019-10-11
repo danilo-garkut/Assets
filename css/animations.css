@@ -1,0 +1,10 @@
+
+
+
+@keyframes from-left
+{
+	from
+	{
+		transform:translateX(-100%);
+	}
+}

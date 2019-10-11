@@ -20,6 +20,7 @@ function CharToHex()
 #Be aware that, if PKCS#5 chooses the byte 0x08, content may be invisible as 0x08 is the BackSpace Byte :)
 function Pad()
 {
+	DebugToStdError "Receiving to Pad: $@"
 	local padded=$1
 	local holder=""
 	local check_pkcs5="PKCS#5"
@@ -46,23 +47,21 @@ function Pad()
 		padded=$holder
 	done
 
-	if [ ! -z $pad_minimal ]
+	( [ ! -z $pad_minimal ] )
+	is_pkcs=$?
+	( [ ! $5 = 1 ] )
+	is_recursing=$?
+	DebugToStdError $is_pkcs $is_recursing
+	if [ $is_pkcs -eq 0 -a $is_recursing -eq 0 ]
 	then
-
-		(
-			! test $(( ${#padded} % $pad_minimal )) -eq 0
-		)
+		( ! test $(( ${#padded} % $pad_minimal )) -eq 0 )
 		multiple=$?
 		if [ $multiple -eq 0 ]
 		then
-			DebugToStdError "Pad recurse: $padded(${#padded}), padded upto: $upto"
-			Pad $padded $2 $3 $4
+			Pad "$padded" $2 $3 $4 1
 			return
 		fi 
 	fi
-
-	DebugToStdError "Pad result: $padded(${#padded}), padded upto: $upto"
-
 	echo -n $padded
 }
 
