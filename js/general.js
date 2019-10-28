@@ -6,13 +6,39 @@ function sprint(body, fill_data_collection)
 	});
 }
 
-function fillTo( pack, config )
+//
+//
+function fillTo( pack, config, modifiers )
 {
 	for (var i = 0 ; i < pack.length ; i++)
 	{
-		
+		var item = getReceiver( pack[ i ][ 0 ], config.receiver_left_tree );
+		item = passThroughModifiers( pack[ i ][ 1 ] );
+	}
+
+
+	function getReceiver ( receiver, tree )
+	{
+		if ( !! tree === true )
+		{
+			var key = Object.keys(tree)[0];
+			return getReceiver( receiver[ key ], tree[ key ] );
+		}
+
+		return receiver;
+	}
+
+	function passThroughModifiers( last_key )
+	{
+		var hold = config.set_right_tree[ last_key ]
+		for ( var r = 0 ; r < modifiers.length ; r++ )
+		{
+			var modified = modifiers[ r ]( hold );
+		}
+		return modified;
 	}
 }
+
 
 function applyFilter( input_list )
 {
@@ -149,7 +175,6 @@ function filterRational ( regexes, ev )
 //Otherwise it could be a combination that we should let pass
 function rightOffTheBatMatchingBasic( ev, regexes, callback )
 {
-	console.log(ev);
 	var key = ev.key;
 	if 
 	(

@@ -6,7 +6,7 @@ function CharToHex()
 	local hexkey=""
 	for (( i=0; i<${#key}; i++ ))
 	do
-		local each_hex=$(echo -en ${key:$i:1} | hexdump -e '"%X"')
+		local each_hex=$(echo -en ${key:$i:1} | hexdump -e '"%02X"')
 		local save_key="$hexkey$each_hex"
 		hexkey=$save_key
 	done
@@ -14,61 +14,50 @@ function CharToHex()
 }
 
 
-#Pad "this"($1), with p($2), left(0) or right(1)($3) pad, up to n($4)
-#Also makes PKCS#5 if p is = "PKCS#5", which will make 
-#n = 8, right pad and fill with the expected bytes as 16 bytes multiple
-#Be aware that, if PKCS#5 chooses the byte 0x08, content may be invisible as 0x08 is the BackSpace Byte :)
+#Pad "this"($1), with p($2), if empty then perform PKCS#7 or 5 using the block size($4), left(0) or right(1)($3) pad, block size($4)
+#Be aware that, if PKCS## chooses the byte 0x08, some content may be invisible as 0x08 is the BackSpace Byte :)
 function Pad()
 {
-	DebugToStdError "Receiving to Pad: $@"
-	local padded=$1
+	local padded="$1"
+	local padded_length=$(echo -en "${padded}" | wc -c)
+	local remainder=$(( $padded_length % $4 ))
 	local holder=""
-	local check_pkcs5="PKCS#5"
 	local side=$(test $3 && echo $3 || echo 1)
-	if [ $2 = $check_pkcs5 ]
+	local upto=$(( $4 - $remainder ))
+#	local padwith=$( ! test -z $2 && echo -en $2 || echo -en "\x"$upto)
+	
+
+	if [ ${#upto} -gt 9 ]
 	then
-		local pkcs_bytes=8
-		local pad_minimal=16
-		local upto=$((pkcs_bytes - ($(echo -n ${padded} | wc -c) % 8) ))
-		padwith=$(echo -en "\x0"$(( $upto )))
+		local padwith=$( echo -n $upto )
 	else
-		local upto=$(($4 - ($(echo -n ${padded} | wc -c) % $4) ))
-		padwith=$(echo -en $2)
+		local padwith=$( echo -n "0$upto" )
 	fi
+	
+	DebugToStdError "Receiving to Pad($( echo -en "$1" | wc -c )):With($padwith) $1"
+
+	! test -z $2 && padwith=$( echo -en $2 )
+
 
 	for (( i=0; i < $upto; i++ ))
 	do
 		if [ $side -eq 0 ]
 		then
-			holder=$padwith$padded
+			holder="$padwith$padded"
 		else
-			holder=$padded$padwith
+			holder="$padded$padwith"
 		fi
-		padded=$holder
+		padded="$holder"
 	done
-
-	( [ ! -z $pad_minimal ] )
-	is_pkcs=$?
-	( [ ! $5 = 1 ] )
-	is_recursing=$?
-	DebugToStdError $is_pkcs $is_recursing
-	if [ $is_pkcs -eq 0 -a $is_recursing -eq 0 ]
-	then
-		( ! test $(( ${#padded} % $pad_minimal )) -eq 0 )
-		multiple=$?
-		if [ $multiple -eq 0 ]
-		then
-			Pad "$padded" $2 $3 $4 1
-			return
-		fi 
-	fi
-	echo -n $padded
+	padded_length=$(echo -en "${padded}" | wc -c)
+	DebugToStdError "Response, $padded_length, $padded"
+	echo -en "$padded"
 }
 
 #This is to log a Debug, without interceding in the main flow
 function DebugToStdError
 {
-	echo ${@} 1>&2
+	echo -e ${@} 1>&2
 }
 
 function Encrypt()
@@ -88,13 +77,27 @@ function Base64Decode()
 }
 
 # $(Curl a=a https://a.com)
-function Curl()
+function CurlFromFile()
 {
+	DebugToStdError "key:$1,\nto this url:$3,\nwith this post:$2\n"
 	cat<<-HELLO
 
 			curl 
 			--request POST
-			--data-urlencode $1
+			--data-urlencode ${1}@${2}
+			--url $3
+
+	HELLO
+}
+
+function Curl
+{
+	DebugToStdError "to this url:$2,\nwith this post:$1\n"
+	cat<<-HELLO
+
+			curl 
+			--request POST
+			--data-urlencode ${1}
 			--url $2
 
 	HELLO

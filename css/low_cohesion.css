@@ -2,10 +2,11 @@
 {
 	--a_beautiful:DarkOliveGreen;
 	--a_magnificence:DarkTurquoise;
+	--light:WhiteSmoke;
 	--inputs-and-fa:2em;
 }
 
-div.input-crib
+.input-crib
 {
 padding:1em;
 border:1px solid var(--a_beautiful);
@@ -15,38 +16,44 @@ position:relative;
 z-index:2;
 }
 
-div.input-crib:last-child
+.input-crib:last-child
 {
 border-bottom-width:1px;
 }
 
 /*****\Inputs******/
-div.input-crib > textarea,
-div.input-crib > select,
-div.input-crib > input
+.input-crib > input,
+.input-crib > select,
+.input-crib > textarea
 {
-/*font-family:'LaneNarrow', 'arial';*/
-font-family:'Arial';
 width:95%;
+}
+
+.input-crib > input,
+.input-crib > select,
+.input-crib > textarea,
+.input-crib > input[type=checkbox] ~ span
+{
+font-family:'Arial';
 font-size:var(--inputs-and-fa);
-outline:none;
 color:var(--a_beautiful);
+display:block;
+height:1em;
 border:0;
 background:none;
 line-height:1;
-/*height:1em;*/
-display:block;
+outline:none;
 }
 
 
-div.input-crib > select
+.input-crib > select
 {
 padding:.5em;
 border:1px solid var(--a_beautiful);
 background-color:var(--a_magnificence);
 }
 
-div.input-crib > textarea
+.input-crib > textarea
 {
 height:5em;
 resize:none;
@@ -55,7 +62,7 @@ border:1px solid var(--a_beautiful);
 
 /*****\Placeholder******/
 
-div.input-crib > aside.placeholder
+.input-crib > aside.placeholder
 {
 display:none;
 font-size:.7em;
@@ -65,7 +72,7 @@ animation-duration:250ms;
 color:white;
 }
 
-div.input-crib > input:not(:placeholder-shown) ~ aside.placeholder
+.input-crib > input:not(:placeholder-shown) ~ aside.placeholder
 {
 display:block;
 }
@@ -114,6 +121,60 @@ display:none;
 {
 display:block;
 }
+
+
+/*****\Checkbox******/
+
+.input-crib > input[type=checkbox] + label
+{
+display:block;
+width:var(--inputs-and-fa);
+height:var(--inputs-and-fa);
+background-color:var(--light);
+border:1px solid var(--a_magnificence);
+float:left;
+margin-right:var(--inputs-and-fa);
+text-align:center;
+}
+
+.input-crib > input[type=checkbox] + label::before
+{
+content:"";
+width:0;
+height:0;
+display:none;
+border-top-color:red;
+border-bottom-color:orange;
+border-left-color:yellow;
+border-right-color:blue;
+border-bottom-width:.5em;
+border-style:solid;
+border-width:.5em;
+}
+
+.input-crib > input[type=checkbox] + label ~ span
+{
+text-align:left;
+}
+
+.input-crib > input[type=checkbox] + label + span,
+.input-crib > input[type=checkbox]:checked + label + span + span
+{
+display:block;
+}
+
+.input-crib > input[type=checkbox]:checked + label::before
+{
+display:block;
+}
+
+.input-crib > input[type=checkbox],
+.input-crib > input[type=checkbox]:checked + label + span,
+.input-crib > input[type=checkbox] + label + span + span
+{
+display:none;
+}
+
 
 
 
