@@ -17,25 +17,20 @@ IN2=/tmp/in2.curl.crypt
 #Binary to plain
 OUT2=/tmp/out2.curl.crypt
 
-
 # A crypts
 function A
 {
-	echo "Pure(${#pure}): $pure"
-	echo "Hexstring(${#hexstring}): $hexstring"
-	echo "Padded(${#padded}): $padded"
-	echo "Key(${#key}): $key"
-
-#	echo -n "$(cat $OUT)" > $POST
 	echo -n "$padded" > $IN
+#	cat $IN | hexdump -v -e '1/1 "[%02X]"'
 	Encrypt $IN $OUT $key $iv
-	post="$data_pack_name=$(cat $OUT)"
+	cat $OUT > $POST
+#	post="$data_pack_name=$(cat $OUT)"
 }
 
 function B
 {
-#	$(CurlFromFile "$data_pac_name" "$POST" $url) > $IN2
-	$(Curl  "$post" $url) > $IN2
+	$(CurlFromFile "$data_pack_name" "$POST" $url) > $IN2
+#	$(Curl  "$post" $url) > $IN2
 }
 
 # C decrypts
@@ -44,15 +39,13 @@ function C
 	echo "Decrypting: $(cat $IN2)"
 	Base64Decode $IN2 $OUT2
 	echo 
-	Decrypt $hexkey $iv $OUT2
+	Decrypt $key $iv $OUT2
 }
 
 
 A
-#B
-#C
-
-
+B
+C
 
 
 

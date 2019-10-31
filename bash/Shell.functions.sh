@@ -10,34 +10,50 @@ function CharToHex()
 		local save_key="$hexkey$each_hex"
 		hexkey=$save_key
 	done
+	DebugToStdError "HexResult: $hexkey"
 	echo $hexkey
+}
+
+function SpacePad
+{
+	local padded="$1"
+	local padded_length=$(echo -en "${padded}" | wc -c)
+	local save_padded_length=$padded_length
+
+	while test $(( $2 - ($padded_length % $2) )) -gt 8
+	do
+		local space_byte=$(echo -en "\x20");
+		local current_padded="$padded"
+		padded="${current_padded}${space_byte}"
+		padded_length=$(echo -en "${padded}" | wc -c)
+	done
+	DebugToStdError "SpacePad: ${save_padded_length}->${padded_length}"
+	echo -en "$padded"
 }
 
 
 #Pad "this"($1), with p($2), if empty then perform PKCS#7 or 5 using the block size($4), left(0) or right(1)($3) pad, block size($4)
-#Be aware that, if PKCS## chooses the byte 0x08, some content may be invisible as 0x08 is the BackSpace Byte :)
+#Be aware that, if PKCS## chooses the byte 0x08, some content may be invisible as 0x08 is the BackSpace Byte, or visible through hexdump :)
 function Pad()
 {
 	local padded="$1"
 	local padded_length=$(echo -en "${padded}" | wc -c)
+
 	local remainder=$(( $padded_length % $4 ))
 	local holder=""
 	local side=$(test $3 && echo $3 || echo 1)
 	local upto=$(( $4 - $remainder ))
-#	local padwith=$( ! test -z $2 && echo -en $2 || echo -en "\x"$upto)
-	
 
-	if [ ${#upto} -gt 9 ]
+	if [ ! -z $2  ]
 	then
-		local padwith=$( echo -n $upto )
+		local padwith=$( echo -en "$2" )
+		local visible_padwith=$( echo -n "$2" )
 	else
-		local padwith=$( echo -n "0$upto" )
+		local padwith=$( echo -en "\x$upto" )
+		local visible_padwith=$( echo -n "\x$upto" )
 	fi
-	
-	DebugToStdError "Receiving to Pad($( echo -en "$1" | wc -c )):With($padwith) $1"
 
-	! test -z $2 && padwith=$( echo -en $2 )
-
+	DebugToStdError "Receiving to Pad($padded_length):With($visible_padwith):Upto($upto) $1"
 
 	for (( i=0; i < $upto; i++ ))
 	do
@@ -48,16 +64,18 @@ function Pad()
 			holder="$padded$padwith"
 		fi
 		padded="$holder"
+
 	done
 	padded_length=$(echo -en "${padded}" | wc -c)
-	DebugToStdError "Response, $padded_length, $padded"
+	crop=200
+	DebugToStdError "Response length: $padded_length, potentially cropped content: ${padded:0:$crop}"
 	echo -en "$padded"
 }
 
 #This is to log a Debug, without interceding in the main flow
 function DebugToStdError
 {
-	echo -e ${@} 1>&2
+	echo ${@} 1>&2
 }
 
 function Encrypt()
@@ -67,6 +85,7 @@ function Encrypt()
 
 function Decrypt()
 {
+	DebugToStdError "Decrypt arguments: $@"
 	openssl enc -d -aes-256-cbc -nosalt -p -v -K $1 -iv $2 -in $3
 }
 
@@ -79,7 +98,7 @@ function Base64Decode()
 # $(Curl a=a https://a.com)
 function CurlFromFile()
 {
-	DebugToStdError "key:$1,\nto this url:$3,\nwith this post:$2\n"
+	DebugToStdError $(echo -en "key:$1,\nto this url:$3,\nwith this post:$2\n")
 	cat<<-HELLO
 
 			curl 
@@ -92,7 +111,7 @@ function CurlFromFile()
 
 function Curl
 {
-	DebugToStdError "to this url:$2,\nwith this post:$1\n"
+	DebugToStdError $(echo -en "to this url:$2,\nwith this post:$1\n")
 	cat<<-HELLO
 
 			curl 
