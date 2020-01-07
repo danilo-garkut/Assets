@@ -1,7 +1,8 @@
 
-group "assets"
-
-apply plugin: "java"
+plugins
+{
+	id "java"
+}
 
 sourceSets
 {
@@ -13,6 +14,7 @@ sourceSets
 		}
 	}
 }
+
 
 task("checkAllJava")
 {
