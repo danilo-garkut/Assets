@@ -4,6 +4,8 @@ plugins
 	id "java"
 }
 
+group "my.assets"
+
 sourceSets
 {
 	main
