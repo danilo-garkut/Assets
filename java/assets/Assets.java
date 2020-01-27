@@ -4,6 +4,21 @@ import java.util.*;
 
 public class Assets
 {
+
+	
+	public String matched( String regex, String against_to )
+	{
+		Pattern pattern = Pattern.compile( regex );
+		Matcher match = pattern.matcher( against_to );
+
+		if ( match.find() )
+		{
+			return match.group();
+		}
+
+		return null;
+	}
+
 	public static void logContext(String label)
 	{
 		System.out.println
