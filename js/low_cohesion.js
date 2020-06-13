@@ -245,3 +245,171 @@ function restartAnin(el, className, callback, callback_max_control)
 	}
 	return el;
 }
+
+
+function classManager(el, classes_names_array, action)
+{	
+	if(el === undefined)
+		return;
+	var classes_names = el.className;
+	if (el.tagName.toLowerCase() === "svg")
+	{
+		classes_names = el.className.baseVal;
+	}
+	var classes = classes_names.split(" ");
+	if (action === "add" || action === undefined)
+	{
+		var has_added = false;
+		for (var w = 0 ; w < classes_names_array.length ; w++)
+		{
+			if (classes.indexOf(classes_names_array[w]) === -1)
+			{
+				classes.push(classes_names_array[w]);
+				has_added = true;
+			}
+		}
+		var classes_joined = classes.join(" ");
+		if (el.tagName.toLowerCase() === "svg")
+		{
+			el.className.baseVal = classes_joined;
+			return has_added;
+		}
+		el.className = classes_joined;
+		return has_added;
+	}
+	for (var w = 0 ; w < classes_names_array.length ; w++)
+	{
+		var index = classes.indexOf(classes_names_array[w]);		
+		if (index !== -1)
+		{
+			classes.splice(index, 1);
+		}
+	}
+	if (el.tagName.toLowerCase() === "svg")
+	{
+		el.className.baseVal = classes.join(" ");
+		return;
+	}
+	el.className = classes.join(" ");
+}
+
+function Ajax( url, request, callback )
+{
+	var prepare_send = "";
+	for ( var rv in request )
+	{
+		prepare_send += sprint( "$0=$1&", [ rv, encodeURIComponent( request[ rv ] ) ] );
+	}
+
+	var send = "";
+	( prepare_send.length > 0 ) && ( send = prepare_send.match(/.+(?=.$)/)[0] );
+
+	var xml_http_request = new XMLHttpRequest();
+
+	xml_http_request.onreadystatechange =  
+		function (ev)
+		{
+			if ( this.readyState === 4 && this.status === 200 )				
+			{
+				callback( this.responseText, this );
+			}
+			else if ( this.readyState === 4 )
+			{
+				callback( null, this );
+			}
+		}
+
+	xml_http_request.open( "POST", url, true );
+	xml_http_request.send( send );
+
+}
+
+function loadFirebase
+		( 
+			workload, 
+			workload_prefix_less_when_localhost,
+			workload_prefix_less_when_not_localhost,
+			callback
+		)
+{
+	var counter = 0;
+	var is_localhost = document.location.host.match(/localhost/) !== null;
+	var init = "/__/firebase/";
+	var load_sequence = [ proceed, callback ];
+	var load_sequence_counter = 0;
+	( is_localhost === true ) && ( init = "https://www.gstatic.com/firebasejs/" )
+	for (var i = 0 ; i < workload.length ; i++)
+	{
+		var script = makeAndAppendScript( sprint("$0$1", [ init, workload[ i ] ]) );
+		script.addEventListener ( "load", load.bind( null, workload ) );
+	}
+
+	function proceed()
+	{
+		( is_localhost === false ) 
+			&&
+		(
+			function (ev)
+			{
+				for (var i = 0 ; i < workload_prefix_less_when_localhost.length ; i++)
+				{
+					var script = makeAndAppendScript( workload_prefix_less_when_not_localhost[ i ] );
+					script.addEventListener( "load", load.bind( null, workload_prefix_less_when_not_localhost ) );
+				}
+			}()
+
+		)
+			||
+		(
+			function (ev)
+			{
+				for (var i = 0 ; i < workload_prefix_less_when_not_localhost.length ; i++)
+				{
+					var script = makeAndAppendScript( workload_prefix_less_when_localhost[ i ] );
+					script.addEventListener( "load", load.bind( null, workload_prefix_less_when_localhost ) );
+				}
+
+			}()
+		)
+	}
+
+	function load (scripts, ev)
+	{
+		++counter;
+		if ( counter >= scripts.length )
+		{
+			counter = 0;
+			load_sequence[ load_sequence_counter++ ]();
+		}			
+
+	}
+}
+
+function makeAndAppendScript( src )
+{
+	var script = document.createElement("script");
+	script.src = src;
+	document.head.appendChild( script );
+	return script;
+}
+
+
+function detectFirebaseAuthState( signedIn, signedOut )
+{
+	firebase.auth().onAuthStateChanged
+	(
+		function ( user )
+		{
+			if ( !! user === true )
+			{
+				signedIn( user );
+			}
+			else
+			{
+				signedOut();
+			}
+		}
+	)
+}
+
+
