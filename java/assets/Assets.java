@@ -6,8 +6,7 @@ import java.util.regex.*;
 public class Assets
 {
 
-	
-	public String matched( String regex, String against_to )
+	public static String matched( String regex, String against_to )
 	{
 		Pattern pattern = Pattern.compile( regex );
 		Matcher match = pattern.matcher( against_to );

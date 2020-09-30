@@ -1,9 +1,26 @@
 :root
 {
-	--a_beautiful:DarkOliveGreen;
-	--a_magnificence:DarkTurquoise;
-	--light:WhiteSmoke;
+	--a_beautiful:green;
+	--a_magnificence:purple;
+	--for_font:crimson;
+	--light:orange;
 	--inputs-and-fa:2em;
+}
+
+.crib
+{
+font-size:medium;
+}
+
+.crib > button
+{
+	width:100%;
+	background-color:var(--a_beautiful);
+	color:var(--for_font);
+	border:0;
+	font-size:var(--inputs-and-fa);
+	padding:.5em;
+	cursor:pointer;
 }
 
 .input-crib
@@ -36,7 +53,7 @@ width:95%;
 {
 font-family:'Arial';
 font-size:var(--inputs-and-fa);
-color:var(--a_beautiful);
+color:var(--for_font);
 display:block;
 height:1em;
 border:0;
