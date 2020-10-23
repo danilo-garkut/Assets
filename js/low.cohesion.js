@@ -1,12 +1,10 @@
-"use-strict"
+"use-strict";
 
 //Both to NodeJS and Web
-
-var dgVeraszto =  dgVeraszto || {};
-var module = module || {};
-dgVeraszto.context = {};
-
 //console.log( module, exports );
+
+
+var module = module || { noModule: true};
 
 (
 
@@ -316,7 +314,7 @@ dgVeraszto.context = {};
 
 				detectFirebaseAuthState: function ( signedIn, signedOut )
 				{
-					firebase.auth().onAuthStateChanged
+					DgvFramework.firebase.auth().onAuthStateChanged
 					(
 						function ( user )
 						{
@@ -363,15 +361,36 @@ dgVeraszto.context = {};
 
 		DgvFramework.lowCohesion = {};
 
-		nodejsModule.exports = functions;
-
-		for ( var i in functions )
+		if ( !! module.noModule === false )
 		{
-			DgvFramework.lowCohesion[ i ] = functions[ i ];
+			nodejsModule.exports = functions;
 		}
+		else
+		{
+			for ( var i in functions )
+			{
+				DgvFramework.lowCohesion[ i ] = functions[ i ];
+			}
+
+			for ( var i in app )
+			{
+				app[ i ].app = app;
+			}
+
+			app.main.initialize.apply( DgvFramework, [ app ] );
+			app = {};
+
+		}
+
 	}
 
-)( module, dgVeraszto );
+)
+( 
+	module, 
+	{
+		context:{}
+	} 
+);
 
 
 

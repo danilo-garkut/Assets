@@ -1,10 +1,18 @@
 :root
 {
-	--a_beautiful:green;
-	--a_magnificence:purple;
-	--for_font:crimson;
-	--light:orange;
-	--inputs-and-fa:2em;
+	--Beautiful:green;
+	--Magnificent:purple;
+	--Splendid:crimson;
+	--Superb:orange;
+
+	--DefaultEm:2em;
+}
+
+
+
+::placeholder
+{
+	color:Crimson;
 }
 
 .crib
@@ -15,18 +23,19 @@ font-size:medium;
 .crib > button
 {
 	width:100%;
-	background-color:var(--a_beautiful);
-	color:var(--for_font);
+	background-color:var(--Beautiful);
+	color:var(--Splendid);
 	border:0;
-	font-size:var(--inputs-and-fa);
+	font-size:var(--DefaultEm);
 	padding:.5em;
 	cursor:pointer;
 }
 
+
 .input-crib
 {
 padding:1em;
-border:1px solid var(--a_beautiful);
+border:1px solid var(--Beautiful);
 border-bottom-width:0;
 color:black;
 position:relative;
@@ -52,8 +61,8 @@ width:95%;
 .input-crib > input[type=checkbox] ~ span
 {
 font-family:'Arial';
-font-size:var(--inputs-and-fa);
-color:var(--for_font);
+font-size:var(--DefaultEm);
+color:var(--Splendid);
 display:block;
 height:1em;
 border:0;
@@ -66,15 +75,15 @@ outline:none;
 .input-crib > select
 {
 padding:.5em;
-border:1px solid var(--a_beautiful);
-background-color:var(--a_magnificence);
+border:1px solid var(--Beautiful);
+background-color:var(--Magnificent);
 }
 
 .input-crib > textarea
 {
 height:5em;
 resize:none;
-border:1px solid var(--a_beautiful);
+border:1px solid var(--Beautiful);
 }
 
 /*****\Placeholder******/
@@ -104,7 +113,7 @@ width:1em;
 height:1em;
 padding:.5em;
 border:1px solid var(--DarkOliveGreen);
-background-color:var(--a_beautiful);
+background-color:var(--Beautiful);
 position:absolute;
 right:0;
 bottom:0;
@@ -145,14 +154,15 @@ display:block;
 .input-crib > input[type=checkbox] + label
 {
 display:block;
-width:var(--inputs-and-fa);
-height:var(--inputs-and-fa);
-background-color:var(--light);
-border:1px solid var(--a_magnificence);
+width:var(--DefaultEm);
+height:var(--DefaultEm);
+background-color:Crimson;
+border:1px solid var(--Magnificent);
 float:left;
-margin-right:var(--inputs-and-fa);
+margin-right:var(--DefaultEm);
 text-align:center;
 }
+
 
 .input-crib > input[type=checkbox] + label::before
 {
@@ -192,7 +202,10 @@ display:block;
 display:none;
 }
 
-
+#_structures
+{
+	display:none;
+}
 
 
 
