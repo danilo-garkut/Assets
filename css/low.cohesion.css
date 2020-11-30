@@ -4,8 +4,11 @@
 	--Magnificent:purple;
 	--Splendid:crimson;
 	--Superb:orange;
-
 	--DefaultEm:2em;
+
+
+	--SharpPink:#fc0fc0;
+	--SharpBlue:#1f70c3;
 }
 
 
@@ -23,8 +26,8 @@ font-size:medium;
 .crib > button
 {
 	width:100%;
-	background-color:var(--Beautiful);
-	color:var(--Splendid);
+	background-color:var(--Magnificent);
+	color:var(--Beautiful);
 	border:0;
 	font-size:var(--DefaultEm);
 	padding:.5em;
@@ -34,8 +37,8 @@ font-size:medium;
 
 .input-crib
 {
-padding:1em;
-border:1px solid var(--Beautiful);
+padding:0 var(--DefaultEm);
+border:1px solid var(--Magnificent);
 border-bottom-width:0;
 color:black;
 position:relative;
@@ -62,28 +65,33 @@ width:95%;
 {
 font-family:'Arial';
 font-size:var(--DefaultEm);
-color:var(--Splendid);
+box-sizing:border-box;
+color:var(--Magnificent);
 display:block;
-height:1em;
 border:0;
 background:none;
-line-height:1;
+padding:0;
 outline:none;
+line-height:3;
+}
+
+.input-crib > input::first-line
+{
 }
 
 
 .input-crib > select
 {
 padding:.5em;
-border:1px solid var(--Beautiful);
-background-color:var(--Magnificent);
+border:1px solid var(--Magnificent);
+background-color:var(--Splendid);
 }
 
 .input-crib > textarea
 {
 height:5em;
 resize:none;
-border:1px solid var(--Beautiful);
+border:1px solid var(--Magnificent);
 }
 
 /*****\Placeholder******/
@@ -112,8 +120,8 @@ display:block;
 width:1em;
 height:1em;
 padding:.5em;
-border:1px solid var(--DarkOliveGreen);
-background-color:var(--Beautiful);
+border:1px solid var(--Magnificent);
+background-color:var(--Splendid);
 position:absolute;
 right:0;
 bottom:0;
@@ -151,55 +159,60 @@ display:block;
 
 /*****\Checkbox******/
 
-.input-crib > input[type=checkbox] + label
+
+label.checkbox
 {
-display:block;
-width:var(--DefaultEm);
-height:var(--DefaultEm);
-background-color:Crimson;
-border:1px solid var(--Magnificent);
-float:left;
-margin-right:var(--DefaultEm);
-text-align:center;
+	display:block;
+/*	padding-left:calc( 2 * var( --DefaultEm ));*/
+}
+
+label.checkbox > input
+{
+	display:none;
+}
+
+label.checkbox > .check-cont
+{
+	float:left;
+	height:var( --DefaultEm );
+	width:var( --DefaultEm );
+	border-radius:.5em;
+	background-color:white;
+	margin-right: calc( var(--DefaultEm ) / 3 );
+	cursor:pointer;
+}
+
+label.checkbox > .check-cont > span
+{
+	display:none;
+	color:var(--SharpPink);
+	text-align:center;
+	line-height:var(--DefaultEm);
+	animation-name:Check;
+	animation-duration:750ms;
+}
+
+label.checkbox > .check-cont > span::before
+{
+	font-size:calc( var(--DefaultEm) / 2 );
 }
 
 
-.input-crib > input[type=checkbox] + label::before
+label.checkbox > input:checked + .check-cont > span
 {
-content:"";
-width:0;
-height:0;
-display:none;
-border-top-color:red;
-border-bottom-color:orange;
-border-left-color:yellow;
-border-right-color:blue;
-border-bottom-width:.5em;
-border-style:solid;
-border-width:.5em;
+	display:block;
 }
 
-.input-crib > input[type=checkbox] + label ~ span
+label.checkbox > label
 {
-text-align:left;
+	float:left;
+	height:var(--DefaultEm);
+	line-height: var(--DefaultEm );
 }
 
-.input-crib > input[type=checkbox] + label + span,
-.input-crib > input[type=checkbox]:checked + label + span + span
+label.checkbox > label > span
 {
-display:block;
-}
-
-.input-crib > input[type=checkbox]:checked + label::before
-{
-display:block;
-}
-
-.input-crib > input[type=checkbox],
-.input-crib > input[type=checkbox]:checked + label + span,
-.input-crib > input[type=checkbox] + label + span + span
-{
-display:none;
+	font-size:var(--DefaultEm);
 }
 
 #_structures
@@ -207,7 +220,19 @@ display:none;
 	display:none;
 }
 
-
+@keyframes Check
+{
+	from
+	{
+		transform:scale(3);
+		opacity:0;
+	}
+	50%
+	{
+		transform:scale(3);
+		opacity:1;
+	}
+}
 
 
 
