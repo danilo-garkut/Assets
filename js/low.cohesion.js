@@ -13,6 +13,24 @@ var module = module || {};
 
 		var functions = 
 		{
+			isDOMLoaded: function ( callback )
+			{
+				if ( document.readyState === "complete" )
+				{
+					callback(  );
+				}
+				else
+				{
+					document.addEventListener
+					(
+						"DOMContentLoaded",
+						function ( ev )
+						{
+							callback( ev );	
+						}
+					);
+				}
+			},
 			loadHTML: function ( content, target, callback )
 			{
 				var htmlInPlace = content.trim().match( /^<.+?>/ );
